@@ -33,7 +33,7 @@ workflows:
           export PATH="$PATH":"$FLUTTER_ROOT/bin/dart"
       - name:   dart  -v 
         script: |
-          dart --version
+          $FLUTTER_ROOT/bin/dart --version
       - name: setup melos 
         script: |
           $FLUTTER_ROOT/bin/dart pub global activate melos
