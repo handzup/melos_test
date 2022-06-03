@@ -35,6 +35,9 @@ workflows:
       - name: Adding melos to PATH
         script: |
           export PATH="$PATH":"$HOME/.pub-cache/bin"
+      - name: echo PATH
+        script: |
+          echo $PATH
       - name: Get dependencies
         script: |
           cd . && melos bootstrap
