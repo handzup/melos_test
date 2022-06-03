@@ -36,7 +36,7 @@ workflows:
           echo $PATH
       - name: setup melos 
         script: |
-          $FLUTTER_ROOT/bin/dart pub global activate --source=git . --executable="https://github.com/invertase/melos.git"
+          $FLUTTER_ROOT/bin/dart pub global activate melos
       - name: Get dependencies
         script: |
           cd . && flutter pub global run melos bootstrap

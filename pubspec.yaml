@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter    
   ui:
-    path: ./packages/ui
+    path: packages/ui
   models:
     path: packages/models
   font_awesome_flutter:
