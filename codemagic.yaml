@@ -1,0 +1,115 @@
+workflows:
+  android-test-workflow:
+    name: Android Test Workflow
+    max_build_duration: 120
+    environment:
+      groups:
+        - keystore_credentials # <-- (Includes CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_PASSWORD, CM_KEY_ALIAS)
+        - other # firebase_token
+      vars:
+        CM_KEYSTORE_PATH: /tmp/keystore.keystore
+        PACKAGE_NAME: "uz.avo.app.test"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set up key properties
+        script: |
+          echo $CM_KEYSTORE | base64 --decode > /tmp/keystore.keystore
+          cat >> "$CM_BUILD_DIR/android/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=/tmp/keystore.keystore
+          EOF
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Adding Flutter pub to PATH
+        script: |
+          export PATH="$PATH":"$FLUTTER_ROOT/bin"
+      - name: Set up Melos
+        script: |
+          flutter pub global activate melos
+      - name: Get dependencies
+        script: |
+          cd . && melos bootstrap
+      - name: Build AAB with Flutter
+        script: |
+          cd . && flutter build appbundle --release -—flavor qa —dart-define=APP_ENV=qa --build-number=$BUILD_NUMBER
+    artifacts:
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+    publishing:
+      slack:
+        channel: "#deploy_mobile_app"
+        notify_on_build_start: true
+        notify:
+          success: true
+          failure: true
+      firebase:
+        firebase_token: $firebase_token
+        android:
+          app_id: 1:1071967297540:android:cf996acb5b7ff3bc6b9551
+          groups:
+            - androidTesters
+          artifact_type: "aab"
+
+  ios-test-workflow:
+    name: iOS Test Workflow
+    max_build_duration: 120
+    environment:
+      groups:
+        - app_store_credentials # <-- (Includes APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_PRIVATE_KEY, CERTIFICATE_PRIVATE_KEY) - https://docs.codemagic.io/code-signing-yaml/signing-ios/
+        - ios_config # APP_STORE_ID
+      vars:
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        BUNDLE_ID: "uz.avo.app.test"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
+        script: |
+          keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+      - name: Use system default keychain
+        script: |
+          keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles
+      - name: Adding Flutter pub to PATH
+        script: |
+          export PATH="$PATH":"$FLUTTER_ROOT/bin"
+      - name: Set up Melos
+        script: |
+          flutter pub global activate melos
+      - name: Get dependencies
+        script: |
+          cd . && melos bootstrap
+      - name: Install pods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Build IPA with Flutter
+        script: |
+          flutter build ipa --release \
+                    --build-number=$BUILD_NUMBER \
+                    --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      slack:
+        channel: "#deploy_mobile_app"
+        notify_on_build_start: true
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
