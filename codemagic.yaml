@@ -34,7 +34,7 @@ workflows:
           flutter pub global activate melos
       - name: Adding melos to PATH
         script: |
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
+          export PATH="$PATH":"$FLUTTER_ROOT/.pub-cache/bin"
       - name: Get dependencies
         script: |
           cd . && melos bootstrap
