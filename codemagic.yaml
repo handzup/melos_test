@@ -36,7 +36,7 @@ workflows:
           $FLUTTER_ROOT/bin/dart pub global activate melos
       - name: Get dependencies
         script: |
-          cd . && flutter pub global run melos bootstrap
+          cd . && $FLUTTER_ROOT/bin/dart pub global run melos bootstrap
       - name: Build AAB with Flutter
         script: |
           cd . && flutter build appbundle --release -—flavor qa —dart-define=APP_ENV=qa --build-number=$BUILD_NUMBER
