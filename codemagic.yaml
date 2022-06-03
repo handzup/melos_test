@@ -5,7 +5,7 @@ workflows:
     environment:
       groups:
         - keystore_credentials # <-- (Includes CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_PASSWORD, CM_KEY_ALIAS)
-        - other # firebase_token
+
       vars:
         CM_KEYSTORE_PATH: /tmp/keystore.keystore
         PACKAGE_NAME: "uz.avo.app.test"
