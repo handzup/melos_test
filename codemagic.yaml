@@ -31,10 +31,10 @@ workflows:
 
       - name: Set up Melos
         script: |
-          flutter pub global activate melos
+          $FLUTTER_ROOT/bin/dart pub global activate melos
       - name: Adding melos to PATH
         script: |
-          export PATH="$PATH":"$HOME/programs/.pub-cache/bin"
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
       - name: Get dependencies
         script: |
           cd . && melos bootstrap
