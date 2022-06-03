@@ -10,7 +10,7 @@ workflows:
         CM_KEYSTORE_PATH: /tmp/keystore.keystore
         PACKAGE_NAME: "uz.avotech.app.test"
       flutter: stable
-      dart: stable
+      dart: '2.17.3'
       xcode: latest
       cocoapods: default
     scripts:
