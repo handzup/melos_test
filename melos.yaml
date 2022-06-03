@@ -2,6 +2,7 @@ name: melos_test
 
 packages:
   - packages/**
+  - packages/ui/**
 
 scripts:
   analyze:
