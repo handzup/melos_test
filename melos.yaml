@@ -2,33 +2,6 @@ name: melos_test
 
 packages:
   - packages/**
-  - packages/ui/**
 
-scripts:
-  analyze:
-    run: melos exec -c 16 --fail-fast -- "dart analyze ."
-    description: Run static analysis on all packages
 
-  flutter_test:
-    run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
-    description: Run tests on packages with Flutter
-    select-package:
-      flutter: true
-      dir-exists: test
-
-  dart_test:
-    run: melos exec --dir-exists="test" --fail-fast -- dart test --no-pub --coverage
-    description: Run tests on packages without Flutter
-    select-package:
-      flutter: false
-      dir-exists: test
-
-  gen_coverage:
-    run: melos exec -- "sh \$MELOS_ROOT_PATH/combine_coverage.sh"
-    description: Combine all coverage
-
-  pre_coverage:
-    run: melos exec -- "sh \$MELOS_ROOT_PATH/pre_coverage.sh"
-    description: Add all files to coverage
-    select-package:
-      dir-exists: test
+ 
