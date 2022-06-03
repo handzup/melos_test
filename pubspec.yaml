@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   flutter:
-    sdk: flutter 
+    sdk: flutter    
   ui:
     path: packages/ui
   models:
