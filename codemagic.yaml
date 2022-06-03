@@ -31,9 +31,9 @@ workflows:
       - name: Adding dart  to PATH
         script: |
           export PATH="$PATH":"$FLUTTER_ROOT/bin/dart"
-      - name:   dart  -v 
+      - name:   echo path
         script: |
-          $FLUTTER_ROOT/bin/dart --version
+          echo $PATH
       - name: setup melos 
         script: |
           $FLUTTER_ROOT/bin/dart pub global activate melos
