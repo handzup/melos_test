@@ -36,7 +36,7 @@ workflows:
           echo $PATH
       - name: setup melos 
         script: |
-          $FLUTTER_ROOT/bin/dart pub global activate melos
+          flutter pub global activate melos 1.3.0
       - name: Get dependencies
         script: |
           cd . && flutter pub global run melos bootstrap
