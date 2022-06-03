@@ -31,7 +31,7 @@ workflows:
 
       - name: Set up Melos
         script: |
-          $FLUTTER_ROOT/bin/dart pub global activate melos
+          flutter pub global activate melos
       - name: Adding melos to PATH
         script: |
           export PATH="$PATH":"$HOME/.pub-cache/bin"
